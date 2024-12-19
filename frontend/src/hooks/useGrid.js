@@ -9,14 +9,14 @@ export default function useGrid(showFactor) {
     Array(GRID_SIZE).fill(0)
   );
 
-  function isValid(row, col, value) {
+  function isValid(rowIdx, colIdx, value) {
     for (let i = 0; i < GRID_SIZE; i++) {
-      if (solvedGrid[row][i] === value || solvedGrid[i][col] === value)
+      if (solvedGrid[rowIdx][i] === value || solvedGrid[i][colIdx] === value)
         return false;
     }
 
-    const startRow = Math.floor(row / SUBGRID_SIZE) * SUBGRID_SIZE;
-    const startCol = Math.floor(col / SUBGRID_SIZE) * SUBGRID_SIZE;
+    const startRow = Math.floor(rowIdx / SUBGRID_SIZE) * SUBGRID_SIZE;
+    const startCol = Math.floor(colIdx / SUBGRID_SIZE) * SUBGRID_SIZE;
 
     for (let i = 0; i < SUBGRID_SIZE; i++) {
       for (let j = 0; j < SUBGRID_SIZE; j++) {
@@ -27,24 +27,24 @@ export default function useGrid(showFactor) {
     return true;
   }
 
-  function solve(row = 0, col = 0) {
-    if (row === GRID_SIZE) return true;
-    if (col === GRID_SIZE) return solve(row + 1, 0);
+  function solve(rowIdx = 0, colIdx = 0) {
+    if (rowIdx === GRID_SIZE) return true;
+    if (colIdx === GRID_SIZE) return solve(rowIdx + 1, 0);
 
-    if (solvedGrid[row][col] !== 0) return solve(row, col + 1);
+    if (solvedGrid[rowIdx][colIdx] !== 0) return solve(rowIdx, colIdx + 1);
 
     for (let value = 1; value <= GRID_SIZE; value++) {
-      if (isValid(row, col, value)) {
-        solvedGrid[row][col] = value;
+      if (isValid(rowIdx, colIdx, value)) {
+        solvedGrid[rowIdx][colIdx] = value;
 
         if (Math.random() <= showFactor) {
-          showGrid[row][col] = value;
+          showGrid[rowIdx][colIdx] = value;
         }
 
-        if (solve(row, col + 1)) return true;
+        if (solve(rowIdx, colIdx + 1)) return true;
 
-        solvedGrid[row][col] = 0;
-        showGrid[row][col] = 0;
+        solvedGrid[rowIdx][colIdx] = 0;
+        showGrid[rowIdx][colIdx] = 0;
       }
     }
 
