@@ -1,15 +1,15 @@
-import Grid from "./components/Grid"
-import Header from "./components/Navbar"
-import "./global.css"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./global.css";
+import MainPage from "./pages/MainPage";
 
 function App() {
-
   return (
-    <>
-    <Header/>
-    <Grid/>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage/>} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

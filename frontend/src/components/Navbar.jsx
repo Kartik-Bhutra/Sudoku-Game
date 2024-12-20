@@ -1,35 +1,36 @@
-import React from "react";
-import navbarStyles from "../styles/navbar.module.css";
-export default function Header() {
+import { Link } from "react-router-dom";
+import navbarStyles from "../styles/componentStyles/navbar.module.css";
+
+export default function Navbar() {
   return (
-    <navbar className={`${navbarStyles.navbar} ${navbarStyles.navbar1}`}>
+    <nav className={`${navbarStyles.navbar} ${navbarStyles.navbar1}`}>
       <header className={navbarStyles.header}>
         <h1 className={`${navbarStyles.linkContainer} ${navbarStyles.heading}`}>
-          <a href="">Sudoku.com</a>
+          <Link to="/">Sudoku.com</Link>
         </h1>
-        <div className={`${navbarStyles.navbar} ${navbarStyles.navbar3}`}>
+        <nav className={`${navbarStyles.navbar} ${navbarStyles.navbar3}`}>
           <div className={navbarStyles.linkContainer}>
-            <a href="">Classic</a>
+            <Link to="">Classic</Link>
           </div>
           <div className={navbarStyles.linkContainer}>
-            <a href="">Solver</a>
+            <Link to="">Solver</Link>
           </div>
-        </div>
+        </nav>
       </header>
       <nav className={`${navbarStyles.navbar} ${navbarStyles.navbar2}`}>
         <div className={navbarStyles.linkContainer}>
-          <a href="">Tournament</a>
+          <Link to="">Tournament</Link>
         </div>
         <div className={navbarStyles.linkContainer}>
-          <a href="">Daily Challenge</a>
+          <Link to="">Daily Challenge</Link>
         </div>
         <div className={navbarStyles.linkContainer}>
-          <a href="">Rules</a>
+          <Link to="">Rules</Link>
         </div>
         <div className={navbarStyles.linkContainer}>
-          <a href="">Profile</a>
+          <Link to="">Profile</Link>
         </div>
       </nav>
-    </navbar>
+    </nav>
   );
 }

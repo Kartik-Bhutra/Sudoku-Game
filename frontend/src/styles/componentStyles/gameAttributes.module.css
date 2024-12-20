@@ -1,0 +1,8 @@
+.functions{
+    display: flex;
+    gap: 1rem;
+}
+
+.notepadRow{
+    display: flex;
+}

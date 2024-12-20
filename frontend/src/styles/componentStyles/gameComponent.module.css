@@ -1,0 +1,19 @@
+.status{
+    display: flex;
+    gap: 2rem;
+}
+
+.difficultyBar{
+    display: flex;
+    gap: 1rem;
+}
+
+.levels{
+    display: flex;
+    gap: 1rem;
+}
+
+.playerStatus{
+    display: flex;
+    gap: 1rem;
+}

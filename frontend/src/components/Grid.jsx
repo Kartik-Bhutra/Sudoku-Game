@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useGrid from "../hooks/useGrid";
-import gridStyles from "../styles/grid.module.css";
+import gridStyles from "../styles/componentStyles/grid.module.css";
 
 export default function Grid() {
   const { generateGrid } = useGrid(0.9);
