@@ -1,6 +1,6 @@
 import gameComponentStyles from "../styles/componentStyles/gameComponent.module.css";
 
-export default function GameComponents() {
+export default function GameComponents({mistakeCount}) {
   return (
     <div className={gameComponentStyles.status}>
       <div className={gameComponentStyles.difficultyBar}>
@@ -14,7 +14,7 @@ export default function GameComponents() {
       <div className={gameComponentStyles.playerStatus}>
         <div>
           <span>Mistakes:</span>
-          <span>0</span>
+          <span>{mistakeCount}/</span>
           <span>3</span>
         </div>
         <div>

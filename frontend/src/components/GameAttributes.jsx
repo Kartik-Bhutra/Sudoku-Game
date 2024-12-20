@@ -1,6 +1,6 @@
 import gameAttributesStyles from "../styles/componentStyles/gameAttributes.module.css"
 
-export default function GameAttributes() {
+export default function GameAttributes({getHint}) {
   return (
     <div>
       <div className={gameAttributesStyles.functions}>
@@ -11,7 +11,7 @@ export default function GameAttributes() {
           <button>Erase</button>
         </div>
         <div>
-          <button>Hint</button>
+          <button onClick={() => {getHint(true)}}>Hint</button>
         </div>
         <div>
           <button>Notes</button>
