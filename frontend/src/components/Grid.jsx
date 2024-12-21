@@ -4,8 +4,8 @@ import GameAttributes from "./GameAttributes";
 import useGrid from "../hooks/useGrid";
 import gridStyles from "../styles/componentStyles/grid.module.css";
 
+const { unsolved, solved } = useGrid();
 export default function Grid() {
-  const { unsolved, solved } = useGrid();
   const [grid, setGrid] = useState(unsolved);
   const [mistakes, setMistakes] = useState(0);
   const [hint, setHint] = useState(false);
@@ -20,7 +20,7 @@ export default function Grid() {
     }
     if (/^[1-9]?$/.test(inputValue)) {
       if (
-        inputValue !== solved[rowIdx][colIdx] &&
+        inputValue != solved[rowIdx][colIdx] &&
         grid[rowIdx][colIdx] != inputValue
       ) {
         setMistakes((prevState) => prevState + 1);
