@@ -1,14 +1,12 @@
-import { useState} from "react";
-import GameComponents from "./GameComponents";
-import GameAttributes from "./GameAttributes";
-import useGrid from "../hooks/useGrid";
 import gridStyles from "../styles/componentStyles/grid.module.css";
+import { useContext } from "react";
+import {OptionsContext}  from "../gameAssest/Options";
 
-const { unsolved, solved } = useGrid();
 export default function Grid() {
-  const [grid, setGrid] = useState(unsolved);
-  const [mistakes, setMistakes] = useState(0);
-  const [hint, setHint] = useState(false);
+  const [grid, setGrid] = useContext(OptionsContext).unsolved;
+  const solved = useContext(OptionsContext).solved;
+  const [mistakes, setMistakes] = useContext(OptionsContext).mistake;
+  const [hints, setHints] = useContext(OptionsContext).hint;
 
   const justOneNum = (e, rowIdx, colIdx) => {
     const inputValue = e.target.value.at(-1);
@@ -36,7 +34,6 @@ export default function Grid() {
 
   return (
     <>
-      <GameComponents mistakeCount={mistakes} />
       <div className={gridStyles.outlineBorder}>
         {grid.map((row, rowIdx) => (
           <div
@@ -65,7 +62,6 @@ export default function Grid() {
           </div>
         ))}
       </div>
-      <GameAttributes getHint={setHint} />
     </>
   );
 }

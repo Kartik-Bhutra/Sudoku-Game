@@ -1,7 +1,11 @@
+:root{
+  --sqaureDimension: min(99vw, 400px);
+}
+
 .outlineBorder {
   border: 2px solid black;
-  width: 400px;
-  height: 400px;
+  width: var(--sqaureDimension);
+  height: var(--sqaureDimension);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

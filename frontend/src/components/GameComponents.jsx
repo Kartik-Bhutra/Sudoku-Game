@@ -1,6 +1,9 @@
 import gameComponentStyles from "../styles/componentStyles/gameComponent.module.css";
+import { useContext } from "react";
+import {OptionsContext}  from "../gameAssest/Options";
 
 export default function GameComponents({mistakeCount}) {
+  const [mistakes] = useContext(OptionsContext).mistake;
   return (
     <div className={gameComponentStyles.status}>
       <div className={gameComponentStyles.difficultyBar}>
@@ -14,7 +17,7 @@ export default function GameComponents({mistakeCount}) {
       <div className={gameComponentStyles.playerStatus}>
         <div>
           <span>Mistakes:</span>
-          <span>{mistakeCount}/</span>
+          <span>{mistakes}/</span>
           <span>3</span>
         </div>
         <div>
