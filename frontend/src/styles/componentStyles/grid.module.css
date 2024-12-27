@@ -65,3 +65,27 @@
   cursor: pointer;
   caret-color: transparent;
 }
+
+.sameBox{
+  background-color: cyan;
+}
+
+.defaultBox{
+  color: blue;
+}
+
+.correctBox{
+  color: green;
+}
+
+.wrongBox .gridField{
+  color: red;
+}
+
+.sameCorrectBox{
+  background-color: red;
+}
+
+.sameWrongBox{
+  background-color: yellow;
+}

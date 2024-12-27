@@ -4,20 +4,8 @@ import useGrid from "../hooks/useGrid";
 export const OptionsContext = createContext();
 
 export default function OptionsContextProvider({ children }) {
-  const defaultGrid = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-
-  const [grid, setGrid] = useState(defaultGrid);
-  const [solvedGrid, setSolvedGrid] = useState(defaultGrid);
+  const [grid, setGrid] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
+  const [solvedGrid, setSolvedGrid] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
   const [mistakes, setMistakes] = useState(0);
   const [hints, setHints] = useState(false);
 

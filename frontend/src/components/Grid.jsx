@@ -1,12 +1,45 @@
 import gridStyles from "../styles/componentStyles/grid.module.css";
-import { useContext } from "react";
-import {OptionsContext}  from "../gameAssest/Options";
+import { useContext, useEffect, useState } from "react";
+import { OptionsContext } from "../gameAssest/Options";
 
 export default function Grid() {
-  const [grid, setGrid] = useContext(OptionsContext).unsolved;
-  const solved = useContext(OptionsContext).solved;
-  const [mistakes, setMistakes] = useContext(OptionsContext).mistake;
-  const [hints, setHints] = useContext(OptionsContext).hint;
+  const {
+    unsolved: [grid, setGrid],
+    solved,
+    mistake: [mistakes, setMistakes],
+    hint: [hints, setHints],
+  } = useContext(OptionsContext);
+  const [rowColorBox, setRowColorBox] = useState(Array(9).fill(""));
+  const [colColorBox, setColColorBox] = useState(Array(9).fill(""));
+  const [boxColorBox, setBoxColorBox] = useState(Array(9).fill(""));
+  const [valueColor, setValueColor] = useState(
+    Array.from({ length: 9 }, () => Array(9).fill(""))
+  );
+  const [sameValueBox, setSameValueBox] = useState(
+    Array.from({ length: 9 }, () => Array(9).fill(""))
+  );
+
+  useEffect(() => {
+    setValueColor(
+      grid.map((row, rowIdx) =>
+        row.map((value, colIdx) =>
+          value === grid[rowIdx][colIdx] ? "defaultBox" : ""
+        )
+      )
+    );
+  }, [solved]);
+
+  const highlight = (rowIdx, colIdx, boxIdx) => {
+    setRowColorBox((prevState) =>
+      prevState.map((_, idx) => (idx === rowIdx ? "sameBox" : ""))
+    );
+    setColColorBox((prevState) =>
+      prevState.map((_, idx) => (idx === colIdx ? "sameBox" : ""))
+    );
+    setBoxColorBox((prevState) =>
+      prevState.map((_, idx) => (idx === boxIdx ? "sameBox" : ""))
+    );
+  };
 
   const justOneNum = (e, rowIdx, colIdx) => {
     const inputValue = e.target.value.at(-1);
@@ -17,51 +50,81 @@ export default function Grid() {
       });
     }
     if (/^[1-9]?$/.test(inputValue)) {
-      if (
-        inputValue != solved[rowIdx][colIdx] &&
-        grid[rowIdx][colIdx] != inputValue
-      ) {
-        setMistakes((prevState) => prevState + 1);
+      if (grid[rowIdx][colIdx] != inputValue) {
+        if (inputValue != solved[rowIdx][colIdx]) {
+          setMistakes((prevState) => prevState + 1);
+          setValueColor((prevState) => {
+            prevState[rowIdx][colIdx] = "wrongBox";
+            return [...prevState];
+          });
+          setSameValueBox((prevState) =>
+            prevState.map((row, rowIdx) =>
+              row.map((value, colIdx) =>
+                grid[rowIdx][colIdx] == inputValue ? "sameWrongBox" : ""
+              )
+            )
+          );
+        } else {
+          setValueColor((prevState) => {
+            prevState[rowIdx][colIdx] = "correctBox";
+            return [...prevState];
+          });
+          setSameValueBox((prevState) =>
+            prevState.map((row, rowIdx) =>
+              row.map((value, colIdx) =>
+                grid[rowIdx][colIdx] == inputValue ? "sameCorrectBox" : ""
+              )
+            )
+          );
+        }
+        setGrid((prevState) => {
+          prevState[rowIdx][colIdx] =
+            inputValue === "" ? 0 : Number(inputValue);
+          return [...prevState];
+        });
       }
-      setGrid((prevState) => {
-        prevState[rowIdx][colIdx] = inputValue === "" ? 0 : Number(inputValue);
-        return [...prevState];
-      });
     } else {
       e.target.value = "";
     }
   };
 
   return (
-    <>
-      <div className={gridStyles.outlineBorder}>
-        {grid.map((row, rowIdx) => (
-          <div
-            key={rowIdx}
-            className={`${gridStyles[`row${rowIdx + 1}`]} ${gridStyles.row}`}
-          >
-            {row.map((gridValue, colIdx) => (
+    <div className={gridStyles.outlineBorder}>
+      {grid.map((row, rowIdx) => (
+        <div
+          key={rowIdx}
+          className={`${gridStyles[`row${rowIdx + 1}`]} ${gridStyles.row}`}
+        >
+          {row.map((gridValue, colIdx) => {
+            const boxIdx = Math.floor(rowIdx / 3) * 3 + Math.floor(colIdx / 3);
+            return (
               <div
                 key={colIdx}
                 className={`${gridStyles.valueContainer} ${
                   gridStyles[`col${colIdx + 1}`]
-                }`}
+                }  ${gridStyles[colColorBox[colIdx]]} ${
+                  gridStyles[rowColorBox[rowIdx]]
+                } ${gridStyles[boxColorBox[boxIdx]]} ${
+                  gridStyles[valueColor[rowIdx][colIdx]]
+                } ${gridStyles[sameValueBox[rowIdx][colIdx]]}
+                `}
+                onClick={() => highlight(rowIdx, colIdx, boxIdx)}
               >
                 {gridValue !== 0 && gridValue === solved[rowIdx][colIdx] ? (
                   gridValue
                 ) : (
                   <input
                     type="text"
-                    className={gridStyles.gridField}
+                    className={`${gridStyles.gridField}`}
                     value={gridValue || ""}
                     onInput={(e) => justOneNum(e, rowIdx, colIdx)}
                   />
                 )}
               </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </>
+            );
+          })}
+        </div>
+      ))}
+    </div>
   );
 }
