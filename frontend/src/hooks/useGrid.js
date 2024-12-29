@@ -62,7 +62,7 @@ function generateSudoku(difficulty = "hard") {
       cells.sort(() => Math.random() - 0.5);
     }
 
-    const removalCounts = { easy: 30, medium: 40, hard: 50 };
+    const removalCounts = { easy: 30, medium: 40, hard: 64 };
     const cellsToRemove = removalCounts[difficulty];
     if (!cellsToRemove) throw new Error("Invalid difficulty specified.");
 

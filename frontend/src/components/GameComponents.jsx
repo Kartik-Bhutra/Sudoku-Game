@@ -1,9 +1,24 @@
 import gameComponentStyles from "../styles/componentStyles/gameComponent.module.css";
-import { useContext } from "react";
-import {OptionsContext}  from "../gameAssest/Options";
+import { useContext, useEffect, useState, useRef } from "react";
+import { OptionsContext } from "../gameAssest/Options";
+import { StopWatch } from "../hooks/useTimer";
 
-export default function GameComponents({mistakeCount}) {
+export default function GameComponents() {
+  const [timer, setTimer] = useState("00:00");
+  const timerInstance = useRef();
   const [mistakes] = useContext(OptionsContext).mistake;
+
+  useEffect(() => {
+    timerInstance.current = new StopWatch(setTimer);
+    return () => {
+      timerInstance.current.stop();
+    };
+  }, []);
+
+  const timerButtonHandler = () => {
+    timerInstance.current.timerId ? timerInstance.current.stop() : timerInstance.current.start();
+  }
+
   return (
     <div className={gameComponentStyles.status}>
       <div className={gameComponentStyles.difficultyBar}>
@@ -25,9 +40,12 @@ export default function GameComponents({mistakeCount}) {
           <span>0</span>
         </div>
         <div>
-          <span>00:</span>
-          <span>00</span>
-          <span>click</span>
+          <span>{timer}</span>
+          <button
+            onClick={timerButtonHandler}
+          >
+            click
+          </button>
         </div>
       </div>
     </div>

@@ -6,8 +6,8 @@ export default function Grid() {
   const {
     unsolved: [grid, setGrid],
     solved,
-    mistake: [mistakes, setMistakes],
-    hint: [hints, setHints],
+    mistake: [, setMistakes],
+    hint: [hints],
   } = useContext(OptionsContext);
   const [rowColorBox, setRowColorBox] = useState(Array(9).fill(""));
   const [colColorBox, setColColorBox] = useState(Array(9).fill(""));
@@ -39,6 +39,13 @@ export default function Grid() {
     setBoxColorBox((prevState) =>
       prevState.map((_, idx) => (idx === boxIdx ? "sameBox" : ""))
     );
+    if (grid[rowIdx][colIdx] !== 0) {
+      setSameValueBox(() =>
+        grid.map((row) =>
+          row.map((value) => (value === grid[rowIdx][colIdx] ? "sameBox" : ""))
+        )
+      );
+    }
   };
 
   const justOneNum = (e, rowIdx, colIdx) => {
@@ -48,6 +55,7 @@ export default function Grid() {
         prevState[rowIdx][colIdx] = 0;
         return [...prevState];
       });
+
     }
     if (/^[1-9]?$/.test(inputValue)) {
       if (grid[rowIdx][colIdx] != inputValue) {
@@ -59,7 +67,7 @@ export default function Grid() {
           });
           setSameValueBox((prevState) =>
             prevState.map((row, rowIdx) =>
-              row.map((value, colIdx) =>
+              row.map((_, colIdx) =>
                 grid[rowIdx][colIdx] == inputValue ? "sameWrongBox" : ""
               )
             )
@@ -71,7 +79,7 @@ export default function Grid() {
           });
           setSameValueBox((prevState) =>
             prevState.map((row, rowIdx) =>
-              row.map((value, colIdx) =>
+              row.map((_, colIdx) =>
                 grid[rowIdx][colIdx] == inputValue ? "sameCorrectBox" : ""
               )
             )
