@@ -1,9 +1,9 @@
-:root{
+:root {
   --sqaureDimension: min(99vw, 400px);
 }
 
 .outlineBorder {
-  border: 2px solid black;
+  border: 2px solid #344861;
   width: var(--sqaureDimension);
   height: var(--sqaureDimension);
   display: flex;
@@ -18,7 +18,7 @@
 
 .row3,
 .row6 {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #344861;
 }
 
 .row1,
@@ -27,7 +27,7 @@
 .row5,
 .row7,
 .row8 {
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #bfc6d4;
 }
 
 .col1,
@@ -36,12 +36,12 @@
 .col5,
 .col7,
 .col8 {
-  border-right: 1px solid gray;
+  border-right: 1px solid #bfc6d4;
 }
 
 .col3,
 .col6 {
-  border-right: 2px solid black;
+  border-right: 2px solid #344861;
 }
 
 .valueContainer {
@@ -52,6 +52,9 @@
   box-sizing: border-box;
   position: relative;
   user-select: none;
+  font-weight: bold;
+  font-size: x-large;
+  font-family: monospace;
 }
 
 .gridField {
@@ -61,32 +64,35 @@
   display: block;
   outline: none;
   border: none;
-  font-size: 1rem;
   background-color: transparent;
   cursor: pointer;
   caret-color: transparent;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  font-family: inherit;
 }
 
-.sameBox{
+.sameBox {
   background-color: cyan;
 }
 
-.defaultBox{
+.defaultBox {
   color: blue;
 }
 
-.correctBox{
+.correctBox {
   color: green;
 }
 
-.wrongBox .gridField{
+.wrongBox .gridField {
   color: red;
 }
 
-.sameCorrectBox{
+.sameCorrectBox {
   background-color: red;
 }
 
-.sameWrongBox{
+.sameWrongBox {
   background-color: yellow;
 }
