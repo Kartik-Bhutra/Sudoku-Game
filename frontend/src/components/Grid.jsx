@@ -8,6 +8,8 @@ export default function Grid() {
     solved,
     mistake: [, setMistakes],
     hint: [hints],
+    value: [values],
+    remaining: [remainings, setRemainings],
   } = useContext(OptionsContext);
   const [rowColorBox, setRowColorBox] = useState(Array(9).fill(false));
   const [colColorBox, setColColorBox] = useState(Array(9).fill(false));
@@ -30,6 +32,13 @@ export default function Grid() {
     setValueColor(
       grid.map((row) => row.map((value) => (value !== 0 ? "#344861" : "")))
     );
+    setRemainings((prevState) => {
+      const newRemainings = prevState.map((_, idx) => {
+        const count = grid.flat().filter((value) => value === idx).length;
+        return idx ? 9 - count : 81 - count;
+      });
+      return newRemainings;
+    });
   }, [solved]);
 
   const sameValues = (inputValue) => {
@@ -39,6 +48,16 @@ export default function Grid() {
       )
     );
   };
+
+  useEffect(() => {
+    setActiveCell({ row: null, col: null });
+    setRowColorBox(Array(9).fill(false));
+    setColColorBox(Array(9).fill(false));
+    setBoxColorBox(Array(9).fill(false));
+    values
+      ? sameValues(values)
+      : setSameValueBox(Array.from({ length: 9 }, () => Array(9).fill(false)));
+  }, [values]);
 
   const highlight = (rowIdx, colIdx, boxIdx) => {
     setActiveCell({ row: rowIdx, col: colIdx });
@@ -53,8 +72,7 @@ export default function Grid() {
     );
   };
 
-  const justOneNum = (e, rowIdx, colIdx) => {
-    const inputValue = e.target.value.at(-1);
+  const justOneNum = (inputValue, rowIdx, colIdx) => {
     if (inputValue === undefined && grid[rowIdx][colIdx] !== 0) {
       const currentValue = grid[rowIdx][colIdx];
       setWrongBox((prevState) => {
@@ -90,6 +108,10 @@ export default function Grid() {
     }
     if (/^[1-9]?$/.test(inputValue)) {
       const num = Number(inputValue);
+      if (remainings[num] === 0) {
+        alert(`There are already 9 ${num}s in the grid`);
+        return;
+      }
       if (grid[rowIdx][colIdx] !== num) {
         sameValues(num);
         if (num !== solved[rowIdx][colIdx]) {
@@ -121,6 +143,11 @@ export default function Grid() {
             return newWrongBox;
           });
         } else {
+          setRemainings((prevState) => {
+            prevState[num]--;
+            prevState[0]--;
+            return [...prevState];
+          });
           setValueColor((prevState) => {
             const newValueColor = prevState.map((row) => [...row]);
             newValueColor[rowIdx][colIdx] = "#325aaf";
@@ -182,11 +209,15 @@ export default function Grid() {
                 }`}
                 onClick={() => {
                   highlight(rowIdx, colIdx, boxIdx);
-                  grid[rowIdx][colIdx]
-                    ? sameValues(grid[rowIdx][colIdx])
-                    : setSameValueBox(
-                        Array.from({ length: 9 }, () => Array(9).fill(""))
-                      );
+                  grid[rowIdx][colIdx] !== solved[rowIdx][colIdx]
+                    ? values
+                      ? justOneNum(values, rowIdx, colIdx)
+                      : grid[rowIdx][colIdx]
+                      ? sameValues(grid[rowIdx][colIdx])
+                      : setSameValueBox(
+                          Array.from({ length: 9 }, () => Array(9).fill(""))
+                        )
+                    : sameValues(grid[rowIdx][colIdx]);
                 }}
                 style={{
                   backgroundColor: bgColor,
@@ -200,7 +231,9 @@ export default function Grid() {
                     type="text"
                     className={`${gridStyles.gridField}`}
                     value={gridValue || ""}
-                    onInput={(e) => justOneNum(e, rowIdx, colIdx)}
+                    onInput={(e) =>
+                      justOneNum(e.target.value.at(-1), rowIdx, colIdx)
+                    }
                   />
                 )}
               </div>
