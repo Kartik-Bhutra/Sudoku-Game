@@ -14,6 +14,10 @@ export default function OptionsContextProvider({ children }) {
   const [hints, setHints] = useState(false);
   const [values, setValues] = useState(0);
   const [remainings, setRemainings] = useState(Array(10).fill(0));
+  const [activeCells, setActiveCells] = useState({
+    row: null,
+    col: null,
+  });
 
   useEffect(() => {
     const { unsolved, solved } = useGrid();
@@ -28,6 +32,7 @@ export default function OptionsContextProvider({ children }) {
     hint: [hints, setHints],
     value: [values, setValues],
     remaining: [remainings, setRemainings],
+    activeCell: [activeCells, setActiveCells],
   };
 
   return (

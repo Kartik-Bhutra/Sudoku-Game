@@ -45,6 +45,9 @@ export default function GameAttributes() {
                         prevState ? (prevState === boxNo ? 0 : boxNo) : boxNo
                       );
                     }}
+                    onBlur={() => {
+                      setValues(0);
+                    }}
                     style={{
                       backgroundColor: values === boxNo ? "#dce3ed" : "#eaeef4",
                     }}

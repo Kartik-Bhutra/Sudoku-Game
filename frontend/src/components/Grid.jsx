@@ -10,14 +10,11 @@ export default function Grid() {
     hint: [hints],
     value: [values],
     remaining: [remainings, setRemainings],
+    activeCell: [activeCells, setActiveCells],
   } = useContext(OptionsContext);
   const [rowColorBox, setRowColorBox] = useState(Array(9).fill(false));
   const [colColorBox, setColColorBox] = useState(Array(9).fill(false));
   const [boxColorBox, setBoxColorBox] = useState(Array(9).fill(false));
-  const [activeCell, setActiveCell] = useState({
-    row: null,
-    col: null,
-  });
   const [valueColor, setValueColor] = useState(
     Array.from({ length: 9 }, () => Array(9).fill(false))
   );
@@ -50,7 +47,7 @@ export default function Grid() {
   };
 
   useEffect(() => {
-    setActiveCell({ row: null, col: null });
+    setActiveCells({ row: null, col: null });
     setRowColorBox(Array(9).fill(false));
     setColColorBox(Array(9).fill(false));
     setBoxColorBox(Array(9).fill(false));
@@ -60,7 +57,7 @@ export default function Grid() {
   }, [values]);
 
   const highlight = (rowIdx, colIdx, boxIdx) => {
-    setActiveCell({ row: rowIdx, col: colIdx });
+    setActiveCells({ row: rowIdx, col: colIdx });
     setRowColorBox((prevState) =>
       prevState.map((_, idx) => (idx === rowIdx ? true : false))
     );
@@ -193,7 +190,7 @@ export default function Grid() {
             const boxIdx = Math.floor(rowIdx / 3) * 3 + Math.floor(colIdx / 3);
             const bgColor = wrongBox[rowIdx][colIdx]
               ? "pink"
-              : activeCell.row === rowIdx && activeCell.col === colIdx
+              : activeCells.row === rowIdx && activeCells.col === colIdx
               ? "#bbdefb"
               : rowColorBox[rowIdx] ||
                 colColorBox[colIdx] ||
@@ -215,10 +212,20 @@ export default function Grid() {
                       : grid[rowIdx][colIdx]
                       ? sameValues(grid[rowIdx][colIdx])
                       : setSameValueBox(
-                          Array.from({ length: 9 }, () => Array(9).fill(""))
+                          Array.from({ length: 9 }, () => Array(9).fill(false))
                         )
                     : sameValues(grid[rowIdx][colIdx]);
                 }}
+                onBlur={() => {
+                  setRowColorBox(Array(9).fill(false));
+                  setColColorBox(Array(9).fill(false));
+                  setBoxColorBox(Array(9).fill(false));
+                  setSameValueBox(
+                    Array.from({ length: 9 }, () => Array(9).fill(false))
+                  );
+                  setActiveCells({ row: null, col: null });
+                }}
+                tabIndex={0}
                 style={{
                   backgroundColor: bgColor,
                   color: valueColor[rowIdx][colIdx],
