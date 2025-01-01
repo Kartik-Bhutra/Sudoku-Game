@@ -11,7 +11,11 @@ export default function Grid() {
     value: [values],
     remaining: [remainings, setRemainings],
     activeCell: [activeCells, setActiveCells],
+    note: [notes],
   } = useContext(OptionsContext);
+  const [boxNotes, setBoxNotes] = useState(
+    Array.from({ length: 9 }, () => Array(9).fill([]))
+  );
   const [rowColorBox, setRowColorBox] = useState(Array(9).fill(false));
   const [colColorBox, setColColorBox] = useState(Array(9).fill(false));
   const [boxColorBox, setBoxColorBox] = useState(Array(9).fill(false));
@@ -179,19 +183,53 @@ export default function Grid() {
     }
   };
 
+  const handleContainerInput = (rowIdx, colIdx, boxIdx) => {
+    highlight(rowIdx, colIdx, boxIdx);
+    if (grid[rowIdx][colIdx] !== 0) {
+      sameValues(grid[rowIdx][colIdx]);
+    }
+    if (notes) {
+      if (boxNotes[rowIdx][colIdx].length == 0) {
+        setBoxNotes((prevState) => {
+          prevState[rowIdx][colIdx] = Array(9).fill(false);
+          return [...prevState];
+        });
+      }
+      return;
+    }
+    if (grid[rowIdx][colIdx] !== solved[rowIdx][colIdx] && values) {
+      if (boxNotes[rowIdx][colIdx].some((value) => value)) {
+        setBoxNotes((prevState) => {
+          prevState[rowIdx][colIdx] = [];
+          return [...prevState];
+        });
+      }
+      justOneNum(values, rowIdx, colIdx);
+    }
+  };
+
   useEffect(() => {
     if (hints) {
       highlight(
-        hints[0]-1,
-        hints[1]-1,
-        Math.floor((hints[0]-1) / 3) * 3 + Math.floor((hints[1]-1) / 3)
+        hints[0] - 1,
+        hints[1] - 1,
+        Math.floor((hints[0] - 1) / 3) * 3 + Math.floor((hints[1] - 1) / 3)
       );
-      justOneNum(hints[2], hints[0]-1, hints[1]-1);
+      justOneNum(hints[2], hints[0] - 1, hints[1] - 1);
     }
   }, [hints]);
 
   return (
-    <div className={gridStyles.outlineBorder}>
+    <div
+      className={gridStyles.outlineBorder}
+      onBlur={() => {
+        setRowColorBox(Array(9).fill(false));
+        setColColorBox(Array(9).fill(false));
+        setBoxColorBox(Array(9).fill(false));
+        setSameValueBox(Array.from({ length: 9 }, () => Array(9).fill(false)));
+        setActiveCells({ row: null, col: null });
+      }}
+    >
       {grid.map((row, rowIdx) => (
         <div
           key={rowIdx}
@@ -216,25 +254,7 @@ export default function Grid() {
                   gridStyles[`col${colIdx + 1}`]
                 }`}
                 onClick={() => {
-                  highlight(rowIdx, colIdx, boxIdx);
-                  grid[rowIdx][colIdx] !== solved[rowIdx][colIdx]
-                    ? values
-                      ? justOneNum(values, rowIdx, colIdx)
-                      : grid[rowIdx][colIdx]
-                      ? sameValues(grid[rowIdx][colIdx])
-                      : setSameValueBox(
-                          Array.from({ length: 9 }, () => Array(9).fill(false))
-                        )
-                    : sameValues(grid[rowIdx][colIdx]);
-                }}
-                onBlur={() => {
-                  setRowColorBox(Array(9).fill(false));
-                  setColColorBox(Array(9).fill(false));
-                  setBoxColorBox(Array(9).fill(false));
-                  setSameValueBox(
-                    Array.from({ length: 9 }, () => Array(9).fill(false))
-                  );
-                  setActiveCells({ row: null, col: null });
+                  handleContainerInput(rowIdx, colIdx, boxIdx);
                 }}
                 tabIndex={1}
                 style={{
@@ -245,14 +265,52 @@ export default function Grid() {
                 {gridValue !== 0 && gridValue === solved[rowIdx][colIdx] ? (
                   gridValue
                 ) : (
-                  <input
-                    type="text"
-                    className={`${gridStyles.gridField}`}
-                    value={gridValue || ""}
-                    onInput={(e) =>
-                      justOneNum(e.target.value.at(-1), rowIdx, colIdx)
-                    }
-                  />
+                  <>
+                    <input
+                      type="text"
+                      className={`${gridStyles.gridField}`}
+                      value={gridValue || ""}
+                      onInput={(e) => {
+                        if (notes) {
+                          const num = Number(e.target.value.at(-1));
+                          if (/^[1-9]?$/.test(num)) {
+                            setBoxNotes((prevState) => {
+                              prevState[rowIdx][colIdx][num - 1] =
+                                !prevState[rowIdx][colIdx][num - 1];
+                              return [...prevState];
+                            });
+                          }
+                          return;
+                        }
+                        justOneNum(e.target.value.at(-1), rowIdx, colIdx);
+                      }}
+                    />
+                    {notes || boxNotes[rowIdx][colIdx].length ? (
+                      <div className={gridStyles.notes}>
+                        {Array.from({ length: 3 }).map((_, noteRowIdx) => (
+                          <div key={noteRowIdx} className={gridStyles.notesRow}>
+                            {Array.from({ length: 3 }).map((_, noteColIdx) => {
+                              const boxNo = noteRowIdx * 3 + noteColIdx + 1;
+                              return (
+                                <div
+                                  key={noteColIdx}
+                                  className={gridStyles.notesCell}
+                                >
+                                  {boxNotes[rowIdx][colIdx][boxNo - 1] ? (
+                                    boxNo
+                                  ) : (
+                                    <span>&nbsp;</span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </>
                 )}
               </div>
             );

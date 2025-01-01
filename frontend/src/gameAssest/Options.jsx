@@ -10,6 +10,7 @@ export default function OptionsContextProvider({ children }) {
   const [solvedGrid, setSolvedGrid] = useState(
     Array.from({ length: 9 }, () => Array(9).fill(0))
   );
+  const [notes,setNotes] = useState(false); 
   const [mistakeCount, setMistakeCount] = useState(0);
   const [hints, setHints] = useState(null);
   const [values, setValues] = useState(0);
@@ -33,6 +34,7 @@ export default function OptionsContextProvider({ children }) {
     value: [values, setValues],
     remaining: [remainings, setRemainings],
     activeCell: [activeCells, setActiveCells],
+    note: [notes, setNotes],
   };
 
   return (

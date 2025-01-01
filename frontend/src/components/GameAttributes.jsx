@@ -5,10 +5,11 @@ import useHint from "../hooks/useHint";
 
 export default function GameAttributes() {
   const {
-    hint:[,setHints],
+    hint: [, setHints],
     unsolved: [grid],
     value: [values, setValues],
     remaining: [remaining],
+    note: [notes, setNotes],
   } = useContext(OptionsContext);
 
   return (
@@ -24,11 +25,10 @@ export default function GameAttributes() {
           <button
             onClick={() => {
               const hint = useHint(grid);
-              if(hint){
+              if (hint) {
                 setHints(hint);
                 console.log(hint);
-              }
-              else{
+              } else {
                 console.log("No hint available");
               }
             }}
@@ -37,10 +37,24 @@ export default function GameAttributes() {
           </button>
         </div>
         <div>
-          <button>Notes</button>
+          <div>{notes ? "ON" : "OFF"}</div>
+          <button
+            onClick={() => {
+              setNotes((prevState) => !prevState);
+            }}
+          >
+            Notes
+          </button>
         </div>
       </div>
-      <div className={gameAttributesStyles.notepad}>
+      <div
+        className={gameAttributesStyles.notepad}
+        onBlur={(e) => {
+          if (e.relatedTarget == null) {
+            setValues(0);
+          }
+        }}
+      >
         {Array.from({ length: 3 }).map((_, rowIdx) => (
           <div key={rowIdx} className={gameAttributesStyles.notepadRow}>
             {Array.from({ length: 3 }).map((_, colIdx) => {
@@ -61,9 +75,6 @@ export default function GameAttributes() {
                       setValues((prevState) =>
                         prevState ? (prevState === boxNo ? 0 : boxNo) : boxNo
                       );
-                    }}
-                    onBlur={() => {
-                      setValues(0);
                     }}
                     style={{
                       backgroundColor: values === boxNo ? "#dce3ed" : "#eaeef4",

@@ -45,6 +45,7 @@
 }
 
 .valueContainer {
+  position: relative;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -71,6 +72,7 @@
   font-weight: inherit;
   font-size: inherit;
   font-family: inherit;
+  z-index: 100;
 }
 
 .sameBox {
@@ -95,4 +97,19 @@
 
 .sameWrongBox {
   background-color: yellow;
+}
+
+.notes{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.notesRow{
+  display: flex;
+  justify-content: space-around;
+}
+
+.notesCell{
+  font-size: small;
 }
