@@ -6,7 +6,7 @@ export default function Grid() {
   const {
     unsolved: [grid, setGrid],
     solved,
-    mistake: [, setMistakes],
+    mistake: [, setMistakeCount],
     hint: [hints],
     value: [values],
     remaining: [remainings, setRemainings],
@@ -112,7 +112,7 @@ export default function Grid() {
       if (grid[rowIdx][colIdx] !== num) {
         sameValues(num);
         if (num !== solved[rowIdx][colIdx]) {
-          setMistakes((prevState) => prevState + 1);
+          setMistakeCount((prevState) => prevState + 1);
           setValueColor((prevState) => {
             const newValueColor = prevState.map((row) => [...row]);
             newValueColor[rowIdx][colIdx] = "red";
@@ -179,6 +179,17 @@ export default function Grid() {
     }
   };
 
+  useEffect(() => {
+    if (hints) {
+      highlight(
+        hints[0]-1,
+        hints[1]-1,
+        Math.floor((hints[0]-1) / 3) * 3 + Math.floor((hints[1]-1) / 3)
+      );
+      justOneNum(hints[2], hints[0]-1, hints[1]-1);
+    }
+  }, [hints]);
+
   return (
     <div className={gridStyles.outlineBorder}>
       {grid.map((row, rowIdx) => (
@@ -225,7 +236,7 @@ export default function Grid() {
                   );
                   setActiveCells({ row: null, col: null });
                 }}
-                tabIndex={0}
+                tabIndex={1}
                 style={{
                   backgroundColor: bgColor,
                   color: valueColor[rowIdx][colIdx],

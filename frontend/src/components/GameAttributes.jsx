@@ -1,12 +1,16 @@
 import gameAttributesStyles from "../styles/componentStyles/gameAttributes.module.css";
 import { useContext } from "react";
 import { OptionsContext } from "../gameAssest/Options";
+import useHint from "../hooks/useHint";
 
 export default function GameAttributes() {
   const {
+    hint:[,setHints],
+    unsolved: [grid],
     value: [values, setValues],
     remaining: [remaining],
   } = useContext(OptionsContext);
+
   return (
     <div>
       <div className={gameAttributesStyles.functions}>
@@ -17,7 +21,20 @@ export default function GameAttributes() {
           <button>Erase</button>
         </div>
         <div>
-          <button>Hint</button>
+          <button
+            onClick={() => {
+              const hint = useHint(grid);
+              if(hint){
+                setHints(hint);
+                console.log(hint);
+              }
+              else{
+                console.log("No hint available");
+              }
+            }}
+          >
+            Hint
+          </button>
         </div>
         <div>
           <button>Notes</button>

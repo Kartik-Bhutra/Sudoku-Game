@@ -10,8 +10,8 @@ export default function OptionsContextProvider({ children }) {
   const [solvedGrid, setSolvedGrid] = useState(
     Array.from({ length: 9 }, () => Array(9).fill(0))
   );
-  const [mistakes, setMistakes] = useState(0);
-  const [hints, setHints] = useState(false);
+  const [mistakeCount, setMistakeCount] = useState(0);
+  const [hints, setHints] = useState(null);
   const [values, setValues] = useState(0);
   const [remainings, setRemainings] = useState(Array(10).fill(0));
   const [activeCells, setActiveCells] = useState({
@@ -28,7 +28,7 @@ export default function OptionsContextProvider({ children }) {
   const contextValue = {
     unsolved: [grid, setGrid],
     solved: solvedGrid,
-    mistake: [mistakes, setMistakes],
+    mistake: [mistakeCount, setMistakeCount],
     hint: [hints, setHints],
     value: [values, setValues],
     remaining: [remainings, setRemainings],

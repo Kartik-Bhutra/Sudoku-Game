@@ -4,20 +4,23 @@ import { OptionsContext } from "../gameAssest/Options";
 import { StopWatch } from "../hooks/useTimer";
 
 export default function GameComponents() {
+  const [start, setStart] = useState(false);
   const [timer, setTimer] = useState("00:00");
   const timerInstance = useRef();
-  const [mistakes] = useContext(OptionsContext).mistake;
+  const [mistakeCount] = useContext(OptionsContext).mistake;
 
   useEffect(() => {
-    timerInstance.current = new StopWatch(setTimer);
+    timerInstance.current = new StopWatch(setTimer, setStart);
     return () => {
       timerInstance.current.stop();
     };
   }, []);
 
   const timerButtonHandler = () => {
-    timerInstance.current.timerId ? timerInstance.current.stop() : timerInstance.current.start();
-  }
+    timerInstance.current.timerId
+      ? timerInstance.current.stop()
+      : timerInstance.current.start();
+  };
 
   return (
     <div className={gameComponentStyles.status}>
@@ -32,7 +35,7 @@ export default function GameComponents() {
       <div className={gameComponentStyles.playerStatus}>
         <div>
           <span>Mistakes:</span>
-          <span>{mistakes}/</span>
+          <span>{mistakeCount}/</span>
           <span>3</span>
         </div>
         <div>
@@ -41,10 +44,8 @@ export default function GameComponents() {
         </div>
         <div>
           <span>{timer}</span>
-          <button
-            onClick={timerButtonHandler}
-          >
-            click
+          <button onClick={timerButtonHandler}>
+            {start ? "Stop" : "Start"}
           </button>
         </div>
       </div>

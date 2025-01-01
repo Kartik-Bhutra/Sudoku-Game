@@ -1,5 +1,6 @@
 export class StopWatch {
-    constructor(setTimer) {
+    constructor(setTimer, setStart) {
+        this.setStart = setStart;
         this.setTimer = setTimer;
         this.elapsedTime = 0;
         this.timerId = null;
@@ -11,6 +12,7 @@ export class StopWatch {
 
     start() {
         if (this.timerId) return;
+        this.setStart(true);
         this.lastUpdate = Date.now();
         this.timerId = setInterval(() => {
             this.elapsedTime += (Date.now() - this.lastUpdate) / 1000;
@@ -22,6 +24,7 @@ export class StopWatch {
     stop() {
         clearInterval(this.timerId);
         this.timerId = null;
+        this.setStart(false);
     }
 
     reset() {

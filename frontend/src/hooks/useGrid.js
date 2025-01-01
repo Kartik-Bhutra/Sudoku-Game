@@ -49,7 +49,7 @@ function solve(grid, rowIdx = 0, colIdx = 0) {
   return false;
 }
 
-function generateSudoku(difficulty = "hard") {
+function generateSudoku(difficulty = "easy") {
   const grid = Array.from({ length: 9 }, () => Array(9).fill(0));
 
   function createPuzzle(grid, difficulty, cells = [], removed = 0) {
