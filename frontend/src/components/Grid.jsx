@@ -189,6 +189,18 @@ export default function Grid() {
       sameValues(grid[rowIdx][colIdx]);
     }
     if (notes) {
+      if (values) {
+        setBoxNotes((prevState) => {
+          if (prevState[rowIdx][colIdx].length) {
+            prevState[rowIdx][colIdx][values - 1] = !prevState[rowIdx][colIdx][values - 1];
+          } else {
+            prevState[rowIdx][colIdx] = Array(9).fill(false);
+            prevState[rowIdx][colIdx][values - 1] = true;
+          }
+          return [...prevState];
+        });
+        return;
+      }
       if (boxNotes[rowIdx][colIdx].length == 0) {
         setBoxNotes((prevState) => {
           prevState[rowIdx][colIdx] = Array(9).fill(false);
@@ -271,9 +283,13 @@ export default function Grid() {
                       className={`${gridStyles.gridField}`}
                       value={gridValue || ""}
                       onInput={(e) => {
+                        let num = e.target.value.at(-1);
                         if (notes) {
-                          const num = Number(e.target.value.at(-1));
+                          if (grid[rowIdx][colIdx]) {
+                            justOneNum(undefined, rowIdx, colIdx);
+                          }
                           if (/^[1-9]?$/.test(num)) {
+                            num = Number(num);
                             setBoxNotes((prevState) => {
                               prevState[rowIdx][colIdx][num - 1] =
                                 !prevState[rowIdx][colIdx][num - 1];
@@ -282,7 +298,7 @@ export default function Grid() {
                           }
                           return;
                         }
-                        justOneNum(e.target.value.at(-1), rowIdx, colIdx);
+                        justOneNum(num, rowIdx, colIdx);
                       }}
                     />
                     {notes || boxNotes[rowIdx][colIdx].length ? (
